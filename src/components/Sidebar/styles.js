@@ -57,13 +57,13 @@ export const SDivider = styled.div`
     height: 1px;
     width: 100%;
     background: ${({ theme }) => theme.bg3};
-    margin: ${v.lgSpacing} 0;
+    margin: ${v.mdSpacing} 0;
 `;
 
 export const SLinkContainer = styled.div`
     background: transparent;
     border-radius: ${v.borderRadius};
-    margin: 8px 0;
+    margin: 7px 0;
 
     :hover {
         box-shadow: inset 0 0 0 1px ${({theme}) => theme.bg3};
@@ -102,4 +102,40 @@ export const SLinkNotification = styled.div`
     color: white;
 
     margin-right: ${v.mdSpacing};
+`;
+
+export const STheme = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 7px 0 0 0;
+`;
+
+export const SThemeLabel = styled.div`
+    display: block;
+    flex: 1;
+`;
+
+export const SThemeToggler = styled.button`
+    ${btnReset};
+    margin: 0 auto;
+    cursor: pointer;
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: ${({theme, isActive}) => (!isActive ? theme.bg3 : theme.primary)};
+
+    position: relative;
+`;
+
+export const SToggleThumb = styled.div`
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: 1px;
+    botton: 1px;
+    transition: -2s ease right;
+    right: calc(100% - 18px - 1px);
+    border-radius: 50%;
+    background: ${({theme}) => theme.bg};
 `;

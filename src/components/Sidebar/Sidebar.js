@@ -1,5 +1,5 @@
-import React from 'react';
-import { SDivider, SLink, SLinkContainer, SLinkIcon, SLinkLabel, SLinkNotification, SLogo, SSearch, SSearchIcon, SSidebar } from './styles';
+import React, { useContext } from 'react';
+import { SDivider, SLink, SLinkContainer, SLinkIcon, SLinkLabel, SLinkNotification, SLogo, SSearch, SSearchIcon, SSidebar, STheme, SThemeLabel, SThemeToggler, SToggleThumb } from './styles';
 
 import { logoSVG } from '../../assets';
 
@@ -8,7 +8,10 @@ import { GiBrassEye, GiGooeyEyedSun, GiCyberEye, GiAbstract069 } from 'react-ico
 import { FaHome } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 
+import { ThemeContext } from './../../App';
+
 const Sidebar = () => {
+    const { setTheme, theme } = useContext(ThemeContext);
     return (
         <SSidebar>
             <SLogo>
@@ -45,6 +48,15 @@ const Sidebar = () => {
                 </SLinkContainer>
             ))}
             <SDivider />
+            <STheme>
+                <SThemeLabel>Dark Mode</SThemeLabel>
+                <SThemeToggler
+                    isActive={theme === 'dark'}
+                    onClick={() => setTheme((p) => (p === 'light' ? "dark" : "light"))}
+                >
+                    <SToggleThumb style={theme === 'dark' ? { right: "1px" } : {  }}/>
+                </SThemeToggler>
+            </STheme>
         </SSidebar>
     );
 };
