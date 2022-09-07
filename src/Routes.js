@@ -18,7 +18,7 @@ const Routes = () => {
                 <h1>Segmentación Macula</h1>
             </Route>
             <Route exact path="/modelo">
-                <h1>Modelo IA</h1>
+                <h1>Modelo Inteligencia Artificial</h1>
             </Route>
         </Switch>
     );

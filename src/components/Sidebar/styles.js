@@ -4,12 +4,29 @@ import styled from "styled-components";
 import { btnReset, v } from "../../styles/variables";
 
 export const SSidebar = styled.div`
-    width: ${v.sidebarWidth};
+    width: ${({isOpen}) => (!isOpen ? `auto` : v.sidebarWidth)};
     background: ${({theme}) => theme.bg};
     height: 100vh;
     padding: ${v.lgSpacing};
 
     position: relative;
+`;
+
+export const SSidebarButton = styled.button`
+    ${btnReset};
+    position: absolute;
+    top: ${v.xxlSpacing};
+    right: ${({isOpen}) => (isOpen ? `-40px` : `-40px`)};
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: ${({theme}) => theme.bg};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    transform: ${({isOpen}) => (!isOpen ? `rotate(180deg)` : `initial`)};
 `;
 
 export const SLogo = styled.div`
@@ -61,7 +78,7 @@ export const SDivider = styled.div`
 `;
 
 export const SLinkContainer = styled.div`
-    background: transparent;
+    background: ${({theme, isActive}) => (!isActive ? `transparent` : theme.bg2)};
     border-radius: ${v.borderRadius};
     margin: 7px 0;
 
@@ -99,7 +116,7 @@ export const SLinkNotification = styled.div`
     padding: calc(${v.smSpacing} /2) ${v.smSpacing};
     border-radius: calc(${v.borderRadius} / 2);
     background: ${({theme}) => theme.primary};
-    color: white;
+    color: ${({theme}) => theme.bg2};
 
     margin-right: ${v.mdSpacing};
 `;
@@ -108,7 +125,7 @@ export const STheme = styled.div`
     display: flex;
     align-items: center;
     font-size: 16px;
-    padding: 7px 0 0 0;
+    padding: 8px 0 0 0;
 `;
 
 export const SThemeLabel = styled.div`

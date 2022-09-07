@@ -1,47 +1,70 @@
-import React, { useContext } from 'react';
-import { SDivider, SLink, SLinkContainer, SLinkIcon, SLinkLabel, SLinkNotification, SLogo, SSearch, SSearchIcon, SSidebar, STheme, SThemeLabel, SThemeToggler, SToggleThumb } from './styles';
+import React, { useContext, useRef, useState } from 'react';
+import { SDivider, SLink, SLinkContainer, SLinkIcon, SLinkLabel, SLinkNotification, SLogo, SSearch, SSearchIcon, SSidebar, SSidebarButton, STheme, SThemeLabel, SThemeToggler, SToggleThumb } from './styles';
 
 import { logoSVG } from '../../assets';
 
-import { AiOutlineSearch, AiOutlineSetting } from 'react-icons/ai';
+import { AiOutlineLeft, AiOutlineSearch, AiOutlineSetting } from 'react-icons/ai';
 import { GiBrassEye, GiGooeyEyedSun, GiCyberEye, GiAbstract069 } from 'react-icons/gi';
 import { FaHome } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 
 import { ThemeContext } from './../../App';
+import { useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+    const searchRef = useRef(null);
     const { setTheme, theme } = useContext(ThemeContext);
+    const [ sidebarOpen, setSidebarOpen ] = useState(false);
+    const { pathname } = useLocation();
+
+    const searchClickHandler = () => {
+        if (!sidebarOpen){
+            setSidebarOpen(true);
+            searchRef.current.focus();
+        } else {
+            // buscar funcionalidad
+        }
+    };
+
     return (
-        <SSidebar>
+        <SSidebar isOpen={sidebarOpen}>
+            <>
+                <SSidebarButton isOpen={sidebarOpen} onClick={() => setSidebarOpen(p => !p)}>
+                    <AiOutlineLeft />
+                </SSidebarButton>
+            </>
             <SLogo>
                 <img src={logoSVG} alt="logo" />
             </SLogo>
-            <SSearch>
+            <SSearch onClick={searchClickHandler} style={!sidebarOpen ? {width: `fit-content` } : {}}>
                 <SSearchIcon>
                     <AiOutlineSearch />
                 </SSearchIcon>
-                <input placeholder='Buscar'/>  
+                <input ref={searchRef} placeholder='Buscar' style={!sidebarOpen ? {width: 0, padding: 0} : {}}/>  
             </SSearch>
             <SDivider />   
             {linksArray.map(({ icon, label, notification, to }) => (
-                <SLinkContainer key={label}>
-                    <SLink to={to}>
+                <SLinkContainer key={label} isActive={pathname === to}>
+                    <SLink to={to} style={!sidebarOpen ? {width: `fit-content`} : {}}>
                         <SLinkIcon>{icon}</SLinkIcon>
-                        <SLinkLabel>{label}</SLinkLabel>
-                        {!!notification && (
-                            <SLinkNotification>{notification}</SLinkNotification>
-                        )}
+                        {sidebarOpen && (
+                            <>
+                                <SLinkLabel>{label}</SLinkLabel>
+                                {!!notification && (
+                                    <SLinkNotification>{notification}</SLinkNotification>
+                                )}
+                            </>  
+                        )}                                              
                     </SLink>
                 </SLinkContainer>
             ))}
             <SDivider />
             {secondaryLinksArray.map(({ icon, label, notification }) => (
                 <SLinkContainer key={label}>
-                    <SLink to="/">
+                    <SLink to="/" style={!sidebarOpen ? {width: `fit-content`} : {}}>
                         <SLinkIcon>{icon}</SLinkIcon>
-                        <SLinkLabel>{label}</SLinkLabel>
-                        {!!notification && (
+                        {sidebarOpen && <SLinkLabel>{label}</SLinkLabel>}
+                        {sidebarOpen && !!notification && (
                             <SLinkNotification>{notification}</SLinkNotification>
                         )}
                     </SLink>
@@ -49,7 +72,7 @@ const Sidebar = () => {
             ))}
             <SDivider />
             <STheme>
-                <SThemeLabel>Dark Mode</SThemeLabel>
+                {sidebarOpen && <SThemeLabel>Dark Mode</SThemeLabel>}
                 <SThemeToggler
                     isActive={theme === 'dark'}
                     onClick={() => setTheme((p) => (p === 'light' ? "dark" : "light"))}
