@@ -15,7 +15,7 @@ export const SSidebar = styled.div`
 export const SSidebarButton = styled.button`
     ${btnReset};
     position: absolute;
-    top: ${v.xxlSpacing};
+    top: ${v.xlSpacing};
     right: ${({isOpen}) => (isOpen ? `-40px` : `-40px`)};
     width: 32px;
     height: 32px;

@@ -42,7 +42,7 @@ const Sidebar = () => {
                 </SSearchIcon>
                 <input ref={searchRef} placeholder='Buscar' style={!sidebarOpen ? {width: 0, padding: 0} : {}}/>  
             </SSearch>
-            <SDivider />   
+            <SDivider />
             {linksArray.map(({ icon, label, notification, to }) => (
                 <SLinkContainer key={label} isActive={pathname === to}>
                     <SLink to={to} style={!sidebarOpen ? {width: `fit-content`} : {}}>
@@ -53,8 +53,8 @@ const Sidebar = () => {
                                 {!!notification && (
                                     <SLinkNotification>{notification}</SLinkNotification>
                                 )}
-                            </>  
-                        )}                                              
+                            </>
+                        )}
                     </SLink>
                 </SLinkContainer>
             ))}

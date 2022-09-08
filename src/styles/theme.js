@@ -9,8 +9,8 @@ export const lightTheme = {
 export const darkTheme = {
     bg: "rgb(15,15,15)",
     bgAlpha: "rgba(0,0,0,.3)",
-    bg2: "rgb(30,30,30)",
+    bg2: "rgb(40,40,40)",
     bg3: "rgb(50,50,50)",
-    text: "rgb(225,225,225)",
+    text: "rgb(240,240,240)",
     primary: "rgb(251,184,0)",
 };
