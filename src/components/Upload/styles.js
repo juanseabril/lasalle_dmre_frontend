@@ -11,7 +11,7 @@ export const SUpload = styled.div`
 
     p {
         font-size: 30px;
-        padding: 30px 0 30px 0;
+        padding: 20px 0 30px 0;
         color: ${({theme}) => theme.text};
     }
 
@@ -19,8 +19,4 @@ export const SUpload = styled.div`
         font-size: 20px;
         color: ${({theme}) => theme.text};
     }
-`;
-
-export const SUploadIcon = styled.div`
-
 `;

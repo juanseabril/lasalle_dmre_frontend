@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import DiscoOptico from './pages/DiscoOptico';
 import HomePage from './pages/HomePage';
 
 const Routes = () => {
@@ -9,7 +10,7 @@ const Routes = () => {
                 <HomePage />
             </Route>
             <Route exact path="/disco">
-                <h1>Segmentación Disco Optico</h1>
+                <DiscoOptico />
             </Route>
             <Route exact path="/drusas">
                 <h1>Segmentación Drusas</h1>
