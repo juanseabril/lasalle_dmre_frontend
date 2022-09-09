@@ -3,10 +3,34 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { SUpload } from './styles';
 import { GoCloudUpload } from 'react-icons/go';
+import { db, storage } from '../../firebase/config';
+import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 
 const Upload = () => {
-    const [fileUpload, setFileUpload] = useState(false);
+    const [fileUpload, setFileUpload] = useState(false); //Variable para ocultar el drag
     const [files, setFiles] = useState([])
+    const uploadPost = async() => {
+        const docRef = await addDoc(collection(db,"posts"),{
+            timestamp: serverTimestamp(),
+            mensaje: "Juanse"
+        })
+        await Promise.all(
+            files?.map(image => {
+                const imageRef = ref(storage, `posts/${docRef.id}/${image.path}`);
+                console.log("imageRef",imageRef)
+                uploadBytes(imageRef, image, "data_url").then(async() => {
+                    console.log("entro")
+                    const downloadURL = await getDownloadURL(imageRef)
+                    console.log('downloadURL', downloadURL)
+                    await updateDoc(doc(db,"posts",docRef.id),{
+                        images: arrayUnion(downloadURL)
+                    })
+                })
+            })
+        )
+        
+    }
     const onDrop = useCallback((acceptedFiles) => {
         console.log("acceptedFiles", acceptedFiles)
         setFileUpload(true);
@@ -31,7 +55,7 @@ const Upload = () => {
                     padding: "18px 36px",
                     fontSize: "18px",
                     width: "300px"
-                }} variant="contained">SEGMENTAR IMAGEN</Button>
+                }} variant="contained" onClick={uploadPost}>SEGMENTAR IMAGEN</Button>
             </div>
         </div>
     ))
