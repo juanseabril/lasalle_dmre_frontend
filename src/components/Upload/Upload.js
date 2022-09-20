@@ -1,38 +1,66 @@
 import { Button, Paper } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { SUpload } from './styles';
-import { GoCloudUpload } from 'react-icons/go';
+import { GoCloudUpload, GoRocket } from 'react-icons/go';
 import { db, storage } from '../../firebase/config';
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import Loader from '../Loader/Loader';
 
-const Upload = () => {
+const Upload = (props) => {
     const [fileUpload, setFileUpload] = useState(false); //Variable para ocultar el drag
-    const [files, setFiles] = useState([])
+    const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [imageResult, setImageResult] = useState(false);  //Variable para mostrar el resultado de la segmentación
+    const [imageUrl, setImageUrl] = useState("test");
+
+    const endpoints = ["http://127.0.0.1:8000/disco_optico/image/", "drusas", "", ""];
+    
     const uploadPost = async() => {
-        const docRef = await addDoc(collection(db,"posts"),{
+        const docRef = await addDoc(collection(db,"images"),{
             timestamp: serverTimestamp(),
-            mensaje: "Juanse"
         })
+
         await Promise.all(
             files?.map(image => {
-                const imageRef = ref(storage, `posts/${docRef.id}/${image.path}`);
-                console.log("imageRef",imageRef)
+                const imageRef = ref(storage, `images/${docRef.id}/original`);
                 uploadBytes(imageRef, image, "data_url").then(async() => {
-                    console.log("entro")
                     const downloadURL = await getDownloadURL(imageRef)
                     console.log('downloadURL', downloadURL)
-                    await updateDoc(doc(db,"posts",docRef.id),{
+                    await updateDoc(doc(db,"images",docRef.id),{
                         images: arrayUnion(downloadURL)
                     })
                 })
+                console.log('docRef.id', docRef.id)
             })
         )
-        
+
+        setLoading(true);
+
+        try {
+            const response = await fetch(endpoints[props.page_id], {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ "name": docRef.id })
+            });
+            if (!response.ok) {
+              throw new Error(`Error! status: ${response.statusText}`);
+            }
+            const result = await response.json();
+            console.log('result is: ', JSON.stringify(result));
+        } catch (err) {
+            console.log(err.message);
+        } finally {
+            // setLoading(false);
+            setImageResult(true);
+            imageSegmentation(docRef.id);
+        }
     }
+
     const onDrop = useCallback((acceptedFiles) => {
-        console.log("acceptedFiles", acceptedFiles)
         setFileUpload(true);
         setFiles(acceptedFiles.map(file=>
             Object.assign(file,{
@@ -40,10 +68,12 @@ const Upload = () => {
             })
         ))
     },[])
+
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept: {'image/*':[]}
     })
+
     const selectedImages = files?.map(file=>(
         <div style = {{margin: "auto"}}>
             <img src={file.preview} style={{width:"300px"}} alt="" />
@@ -59,6 +89,23 @@ const Upload = () => {
             </div>
         </div>
     ))
+
+    const imageSegmentation = async(docRefId) => {
+        console.log("Prueba docRefId", docRefId)
+        const imageRef = ref(storage, `images/${docRefId}/disco_optico`);
+        const downloadURL = await getDownloadURL(imageRef);
+        await updateDoc(doc(db,"images",docRefId),{
+            images: arrayUnion(downloadURL)
+        })
+        console.log("urlResult: !! ", downloadURL)
+
+        setImageUrl(downloadURL);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        console.log("Hubo un cambio ", imageUrl)
+    }, [imageUrl]);
 
     return (
         <SUpload>
@@ -86,11 +133,17 @@ const Upload = () => {
                     ) : (
                         <p>Puedes arrastrar ó dar click para seleccionar las imágenes</p>
                     )}
-                    <em>(Solo se aceptan archivos con extensiones *.jpeg, *.png, *.jpg *.tiff)</em>
+                    <em>(Solo se aceptan archivos con extensiones *.jpeg, *.png, *.jpg)</em>
                     </div>
                 </Paper>
             }
-            {selectedImages}
+            {!imageResult && !loading && selectedImages}
+            {loading && <Loader></Loader>}
+            {!loading && imageResult &&
+                <div style = {{margin: "auto"}}>
+                    <img src={imageUrl} width={500}/>
+                </div>
+            }
         </SUpload>
     );
 };
