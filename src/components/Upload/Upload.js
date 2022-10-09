@@ -2,7 +2,7 @@ import { Button, Paper } from '@mui/material';
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { SUpload } from './styles';
-import { GoCloudUpload, GoRocket } from 'react-icons/go';
+import { GoCloudUpload } from 'react-icons/go';
 import { db, storage } from '../../firebase/config';
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
@@ -14,9 +14,9 @@ const Upload = (props) => {
     const [loading, setLoading] = useState(false);
     const [imageResult, setImageResult] = useState(false);  //Variable para mostrar el resultado de la segmentación
     const [imageUrl, setImageUrl] = useState("test");
+    const segmentationPages = ['disco_optico', 'drusas', '', ''];
+    const endpoints = ["http://127.0.0.1:8000/disco_optico/", "http://127.0.0.1:8000/drusas/", "", ""];
 
-    const endpoints = ["http://127.0.0.1:8000/disco_optico/image/", "drusas", "", ""];
-    
     const uploadPost = async() => {
         const docRef = await addDoc(collection(db,"images"),{
             timestamp: serverTimestamp(),
@@ -91,14 +91,11 @@ const Upload = (props) => {
     ))
 
     const imageSegmentation = async(docRefId) => {
-        console.log("Prueba docRefId", docRefId)
-        const imageRef = ref(storage, `images/${docRefId}/disco_optico`);
+        const imageRef = ref(storage, `images/${docRefId}/${segmentationPages[props.page_id]}`);
         const downloadURL = await getDownloadURL(imageRef);
         await updateDoc(doc(db,"images",docRefId),{
             images: arrayUnion(downloadURL)
         })
-        console.log("urlResult: !! ", downloadURL)
-
         setImageUrl(downloadURL);
         setLoading(false);
     }
@@ -141,7 +138,7 @@ const Upload = (props) => {
             {loading && <Loader></Loader>}
             {!loading && imageResult &&
                 <div style = {{margin: "auto"}}>
-                    <img src={imageUrl} width={500}/>
+                    <img src={imageUrl} width={500} alt=""/>
                 </div>
             }
         </SUpload>

@@ -40,7 +40,7 @@ const Sidebar = () => {
                 <SSearchIcon>
                     <AiOutlineSearch />
                 </SSearchIcon>
-                <input ref={searchRef} placeholder='Buscar' style={!sidebarOpen ? {width: 0, padding: 0} : {}}/>  
+                <input ref={searchRef} placeholder='Buscar' style={!sidebarOpen ? {width: 0, padding: 0} : {}}/>
             </SSearch>
             <SDivider />
             {linksArray.map(({ icon, label, notification, to }) => (
