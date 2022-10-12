@@ -5,20 +5,20 @@ import Drusas from './pages/Drusas';
 import HomePage from './pages/HomePage';
 import Macula from './pages/Macula';
 
-const Routes = () => {
+const Routes = (props) => {
     return (
         <Switch>
             <Route exact path="/">
-                <HomePage />
+                <HomePage userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/disco">
-                <DiscoOptico />
+                <DiscoOptico userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/drusas">
-                <Drusas />
+                <Drusas userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/macula">
-                <Macula />
+                <Macula userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/modelo">
                 <h1>Modelo Inteligencia Artificial</h1>

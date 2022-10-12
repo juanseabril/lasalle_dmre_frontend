@@ -40,7 +40,7 @@ const App = () => {
                     />
                 </Helmet>
                 <Layout>
-                    <Routes />
+                    <Routes userEmail={userEmail}/>
                 </Layout>
             </ThemeProvider>}
         </ThemeContext.Provider>
