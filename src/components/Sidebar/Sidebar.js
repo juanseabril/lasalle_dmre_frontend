@@ -98,9 +98,9 @@ const linksArray = [
         notification: 0
     },
     {
-        label: "Drusas",
+        label: "Vasos",
         icon: <GiAbstract069 />,
-        to: "/drusas",
+        to: "/vasos",
         notification: 0
     },
     {

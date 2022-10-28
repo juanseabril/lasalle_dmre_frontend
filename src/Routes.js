@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DiscoOptico from './pages/DiscoOptico';
-import Drusas from './pages/Drusas';
+import Vasos from './pages/Vasos';
 import HomePage from './pages/HomePage';
 import Macula from './pages/Macula';
 
@@ -14,8 +14,8 @@ const Routes = (props) => {
             <Route exact path="/disco">
                 <DiscoOptico userEmail={props.userEmail}/>
             </Route>
-            <Route exact path="/drusas">
-                <Drusas userEmail={props.userEmail}/>
+            <Route exact path="/vasos">
+                <Vasos userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/macula">
                 <Macula userEmail={props.userEmail}/>

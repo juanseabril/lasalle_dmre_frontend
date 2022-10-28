@@ -13,9 +13,13 @@ const Upload = (props) => {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [imageResult, setImageResult] = useState(false);  //Variable para mostrar el resultado de la segmentación
-    const [imageUrl, setImageUrl] = useState("test");
-    const segmentationPages = ['disco_optico', 'drusas', '', ''];
-    const endpoints = ["http://127.0.0.1:8000/disco_optico/", "http://127.0.0.1:8000/drusas/", "", ""];
+    const [imageUrl, setImageUrl] = useState("");
+    const [imageOrig, setImageOrig] = useState("");
+    const [imageClahe, setImageClahe] = useState("");
+    const [imageThresh, setImageThresh] = useState("");
+    const [endpointResult, setEndpointResult] = useState("");
+    // const segmentationPages = ['disco_optico', 'vasos', '', ''];
+    const endpoints = ["https://lasalle-dmre.herokuapp.com/disco_optico/", "http://127.0.0.1:8000/vasos/", "http://127.0.0.1:8000/disco_optico/", ""];
     const pos = props.userEmail.search("@");
     const user = props.userEmail.slice(0, pos);
     const date = new Date();
@@ -71,11 +75,10 @@ const Upload = (props) => {
         .catch(error => {
             console.log(error);
         })
-        // const docRef = await addDoc(collection(db,user),{
-        //     timestamp: serverTimestamp(),
-        // })
 
         const finalTime = time
+
+        const delay = ms => new Promise(res => setTimeout(res, ms));
 
         await Promise.all(
             files?.map(image => {
@@ -93,13 +96,15 @@ const Upload = (props) => {
 
         setLoading(true);
         console.log("name is: ", finalTime)
-        console.log("user is: ", user)
 
         try {
+            await delay(5000);
+            console.log("Waited 5s");
+            console.log("user is: ", user)
             const response = await fetch(endpoints[props.page_id], {
               method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({ "name": finalTime, "user": user })
             });
@@ -107,6 +112,7 @@ const Upload = (props) => {
               throw new Error(`Error! status: ${response.statusText}`);
             }
             const result = await response.json();
+            setEndpointResult(result)
             console.log('result is: ', JSON.stringify(result));
         } catch (err) {
             console.log("error en el consumo del api es: ", err.message);
@@ -148,8 +154,22 @@ const Upload = (props) => {
     ))
 
     const imageSegmentation = async(finalTime) => {
-        console.log("finalTime: ", finalTime);
-        const imageRef = ref(storage, `${user}/${finalTime}/${segmentationPages[props.page_id]}`);
+        // Descarga de las imagenes segmentadas y carga del link del storage a la base de datos
+        // disco_optico original
+        const imageRefOrig = ref(storage, `${user}/${finalTime}/original`);
+        const downloadURLOrig = await getDownloadURL(imageRefOrig);
+        setImageOrig(downloadURLOrig);
+        // disco_optico clahe
+        const imageRefClahe = ref(storage, `${user}/${finalTime}/clahe`);
+        const downloadURLClahe = await getDownloadURL(imageRefClahe);
+        setImageClahe(downloadURLClahe);
+        // disco_optico thresh
+        const imageRefThresh = ref(storage, `${user}/${finalTime}/thresh`);
+        const downloadURLThresh = await getDownloadURL(imageRefThresh);
+        setImageThresh(downloadURLThresh);
+        // disco_optico resultado
+        // const imageRef = ref(storage, `${user}/${finalTime}/${segmentationPages[props.page_id]}`);
+        const imageRef = ref(storage, `${user}/${finalTime}/detection`);
         const downloadURL = await getDownloadURL(imageRef);
         await updateDoc(doc(db,user,finalTime),{
             images: arrayUnion(downloadURL)
@@ -196,7 +216,13 @@ const Upload = (props) => {
             {loading && <Loader></Loader>}
             {!loading && imageResult &&
                 <div style = {{margin: "auto"}}>
-                    <img src={imageUrl} width={500} alt=""/>
+                    <img src={imageOrig} width={300} alt="" style = {{padding: "25px 30px"}}/>
+                    <img src={imageClahe} width={300} alt="" style = {{padding: "25px 30px"}}/>
+                    <div></div>
+                    <img src={imageThresh} width={300} alt="" style = {{padding: "0px 30px"}}/>
+                    <img src={imageUrl} width={300} alt="" style = {{padding: "0px 30px"}}/>
+                    <div style = {{padding: "0px 0px 20px 0px"}}></div>
+                    <h1>{endpointResult}</h1>
                 </div>
             }
         </SUpload>

@@ -108,7 +108,7 @@ export const SLinkIcon = styled.div`
 export const SLinkLabel = styled.span`
     display: block;
     flex: 1;
-    margin-left: ${v.smSpacing};
+    margin-left: ${v.vsmSpacing};
 `;
 
 export const SLinkNotification = styled.div`
