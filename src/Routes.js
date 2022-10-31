@@ -8,7 +8,7 @@ import Macula from './pages/Macula';
 const Routes = (props) => {
     return (
         <Switch>
-            <Route exact path="/">
+            <Route exact path="/lasalle_dmre_frontend">
                 <HomePage userEmail={props.userEmail}/>
             </Route>
             <Route exact path="/disco">

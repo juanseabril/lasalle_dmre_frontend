@@ -14,7 +14,7 @@ import { useLocation } from 'react-router-dom';
 const Sidebar = () => {
     const searchRef = useRef(null);
     const { setTheme, theme } = useContext(ThemeContext);
-    const [ sidebarOpen, setSidebarOpen ] = useState(false);
+    const [ sidebarOpen, setSidebarOpen ] = useState(true);
     const { pathname } = useLocation();
 
     const searchClickHandler = () => {
@@ -88,7 +88,7 @@ const linksArray = [
     {
         label: "Inicio",
         icon: <FaHome />,
-        to: "/",
+        to: "/lasalle_dmre_frontend",
         notification: 3
     },
     {
