@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/lasalle_dmre_frontend/static/js/main.a56d679f.js",
+    "main.js": "/lasalle_dmre_frontend/static/js/main.d9862242.js",
     "static/media/intro.png": "/lasalle_dmre_frontend/static/media/intro.a1504ca2a246a7c48df4.png",
     "static/media/universidadLogo.png": "/lasalle_dmre_frontend/static/media/universidadLogo.581860bc4b45d7784448.png",
     "static/media/tesisLogo.png": "/lasalle_dmre_frontend/static/media/tesisLogo.8aa889139f061d827ec7.png",
     "index.html": "/lasalle_dmre_frontend/index.html",
-    "main.a56d679f.js.map": "/lasalle_dmre_frontend/static/js/main.a56d679f.js.map"
+    "main.d9862242.js.map": "/lasalle_dmre_frontend/static/js/main.d9862242.js.map"
   },
   "entrypoints": [
-    "static/js/main.a56d679f.js"
+    "static/js/main.d9862242.js"
   ]
 }
